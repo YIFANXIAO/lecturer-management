@@ -20,7 +20,7 @@ public class CourseRequestDto {
 
     private CourseType type;
 
-    private String desc;
+    private String description;
 
     private Long contractId;
 

@@ -38,8 +38,8 @@ public class CourseRequest {
     @Enumerated(EnumType.STRING)
     private CourseType type;
 
-    @Column(name = "desc")
-    private String desc;
+    @Column(name = "description")
+    private String description;
 
     @Column(name = "contract_id")
     private Long contractId;
