@@ -22,6 +22,8 @@ public class CourseRequestDto {
 
     private String desc;
 
+    private Long contractId;
+
     private Instant createdAt;
 
     private Instant expiredAt;

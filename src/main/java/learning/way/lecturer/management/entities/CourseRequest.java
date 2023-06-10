@@ -41,6 +41,9 @@ public class CourseRequest {
     @Column(name = "desc")
     private String desc;
 
+    @Column(name = "contract_id")
+    private Long contractId;
+
     @Column(name = "created_at")
     private Instant createdAt;
 

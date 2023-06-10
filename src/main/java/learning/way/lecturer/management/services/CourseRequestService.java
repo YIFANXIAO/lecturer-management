@@ -17,12 +17,13 @@ public class CourseRequestService {
 
     private final CourseContentClient courseContentClient;
 
-    public Long submitCourseRequest(CourseRequestDto courseRequestDto) {
+    public Long submitCourseRequest(CourseRequestDto courseRequestDto, Long contractId) {
 
         CourseRequest courseRequest = CourseRequest.builder()
             .name(courseRequestDto.getName())
             .type(courseRequestDto.getType())
             .desc(courseRequestDto.getDesc())
+            .contractId(contractId)
             .createdAt(courseRequestDto.getCreatedAt())
             .expiredAt(courseRequestDto.getExpiredAt())
             .build();
@@ -31,6 +32,21 @@ public class CourseRequestService {
         courseContentClient.submitCourseRequest(courseRequestDto);
 
         return courseRequest.getId();
+    }
+
+    public CourseRequestDto getCourseRequest(Long courseRequestId) {
+
+        CourseRequest courseRequest = courseRequestRepository.findById(courseRequestId)
+            .orElse(CourseRequest.builder().build());
+
+        return CourseRequestDto.builder()
+            .name(courseRequest.getName())
+            .type(courseRequest.getType())
+            .desc(courseRequest.getDesc())
+            .contractId(courseRequest.getContractId())
+            .createdAt(courseRequest.getCreatedAt())
+            .expiredAt(courseRequest.getExpiredAt())
+            .build();
     }
 
 }
