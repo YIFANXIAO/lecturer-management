@@ -4,7 +4,7 @@ import learning.way.lecturer.management.clients.CourseContentClient;
 import learning.way.lecturer.management.dtos.CourseRequestDto;
 import learning.way.lecturer.management.entities.CourseRequest;
 import learning.way.lecturer.management.enums.CourseType;
-import learning.way.lecturer.management.repository.CourseRequestRepository;
+import learning.way.lecturer.management.repositories.CourseRequestRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 

@@ -1,4 +1,4 @@
-package learning.way.lecturer.management.repository;
+package learning.way.lecturer.management.repositories;
 
 import learning.way.lecturer.management.entities.CourseRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
