@@ -48,5 +48,5 @@ logging:
   config: classpath:logback-json.xml
 
 feign:
-  shipping:
-    url: http://localhost:8082
+  course-content-integration:
+    url: http://localhost:8081
