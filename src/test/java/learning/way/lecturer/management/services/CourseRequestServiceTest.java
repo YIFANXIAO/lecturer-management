@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.time.Instant;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -62,7 +61,7 @@ class CourseRequestServiceTest {
             .createdAt(Instant.parse("2023-06-01T00:00:00Z"))
             .expiredAt(Instant.parse("2023-07-01T00:00:00Z"))
             .build();
-        when(courseRequestRepository.findById(1L)).thenReturn(Optional.ofNullable(request));
+        when(courseRequestRepository.findByContractIdAndId(1L, 1L)).thenReturn(request);
 
         CourseRequestService courseRequestService = new CourseRequestService(courseRequestRepository, courseContentClient);
         CourseRequestDto courseRequestDto = courseRequestService.getCourseRequest(1L, 1L);
@@ -72,6 +71,43 @@ class CourseRequestServiceTest {
         assertEquals(CourseType.HIGHER_MATHEMATICS, courseRequestDto.getType());
         assertEquals(Instant.parse("2023-06-01T00:00:00Z"), courseRequestDto.getCreatedAt());
         assertEquals(Instant.parse("2023-07-01T00:00:00Z"), courseRequestDto.getExpiredAt());
+    }
+
+    @Test
+    void should_validate_course_request_success_when_all_params_legal() {
+        CourseContentClient courseContentClient = Mockito.mock(CourseContentClient.class);
+
+        CourseRequestRepository courseRequestRepository = Mockito.mock(CourseRequestRepository.class);
+        CourseRequestDto requestDto = CourseRequestDto.builder()
+            .name("LinearAlgebra")
+            .type(CourseType.HIGHER_MATHEMATICS)
+            .contractId(1L)
+            .createdAt(Instant.parse("2023-06-01T00:00:00Z"))
+            .expiredAt(Instant.parse("2023-07-01T00:00:00Z"))
+            .build();
+
+        CourseRequestService courseRequestService = new CourseRequestService(courseRequestRepository, courseContentClient);
+        boolean validateResult = courseRequestService.validateCourseRequest(requestDto);
+
+        assertEquals(true, validateResult);
+    }
+
+    @Test
+    void should_validate_course_request_field_when_lack_type() {
+        CourseContentClient courseContentClient = Mockito.mock(CourseContentClient.class);
+
+        CourseRequestRepository courseRequestRepository = Mockito.mock(CourseRequestRepository.class);
+        CourseRequestDto requestDto = CourseRequestDto.builder()
+            .name("LinearAlgebra")
+            .contractId(1L)
+            .createdAt(Instant.parse("2023-06-01T00:00:00Z"))
+            .expiredAt(Instant.parse("2023-07-01T00:00:00Z"))
+            .build();
+
+        CourseRequestService courseRequestService = new CourseRequestService(courseRequestRepository, courseContentClient);
+        boolean validateResult = courseRequestService.validateCourseRequest(requestDto);
+
+        assertEquals(false, validateResult);
     }
 
 }

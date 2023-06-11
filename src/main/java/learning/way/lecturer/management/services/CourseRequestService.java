@@ -7,6 +7,10 @@ import learning.way.lecturer.management.repositories.CourseRequestRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.util.Objects;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +20,16 @@ public class CourseRequestService {
     private final CourseRequestRepository courseRequestRepository;
 
     private final CourseContentClient courseContentClient;
+
+    public boolean validateCourseRequest(CourseRequestDto courseRequestDto) {
+        return Stream.of(
+                    StringUtils.hasText(courseRequestDto.getName()),
+                    !Objects.isNull(courseRequestDto.getType()),
+                    !Objects.isNull(courseRequestDto.getContractId()),
+                    !Objects.isNull(courseRequestDto.getCreatedAt()),
+                    !Objects.isNull(courseRequestDto.getExpiredAt())
+               ).allMatch(item -> item);
+    }
 
     public Long submitCourseRequest(CourseRequestDto courseRequestDto, Long contractId) {
 
