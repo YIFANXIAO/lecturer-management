@@ -112,4 +112,23 @@ class CourseRequestServiceTest {
         assertFalse(validateResult);
     }
 
+    @Test
+    void should_validate_course_request_field_when_expired_at_illegal() {
+        CourseContentClient courseContentClient = Mockito.mock(CourseContentClient.class);
+
+        CourseRequestRepository courseRequestRepository = Mockito.mock(CourseRequestRepository.class);
+        CourseRequestDto requestDto = CourseRequestDto.builder()
+            .name("LinearAlgebra")
+            .type(CourseType.HIGHER_MATHEMATICS)
+            .contractId(1L)
+            .createdAt(Instant.parse("1970-06-01T00:00:00Z"))
+            .expiredAt(Instant.parse("1970-07-01T00:00:00Z"))
+            .build();
+
+        CourseRequestService courseRequestService = new CourseRequestService(courseRequestRepository, courseContentClient);
+        boolean validateResult = courseRequestService.validateCourseRequest(requestDto);
+
+        assertFalse(validateResult);
+    }
+
 }

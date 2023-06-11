@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.Instant;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -27,7 +28,8 @@ public class CourseRequestService {
                     !Objects.isNull(courseRequestDto.getType()),
                     !Objects.isNull(courseRequestDto.getContractId()),
                     !Objects.isNull(courseRequestDto.getCreatedAt()),
-                    !Objects.isNull(courseRequestDto.getExpiredAt())
+                    !Objects.isNull(courseRequestDto.getExpiredAt()),
+                    courseRequestDto.getExpiredAt().isAfter(Instant.now())
                ).allMatch(item -> item);
     }
 
