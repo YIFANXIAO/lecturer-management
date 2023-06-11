@@ -11,6 +11,8 @@ import org.mockito.Mockito;
 import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -27,14 +29,14 @@ class CourseRequestServiceTest {
             .name("LinearAlgebra")
             .type(CourseType.HIGHER_MATHEMATICS)
             .createdAt(Instant.parse("2023-06-01T00:00:00Z"))
-            .expiredAt(Instant.parse("2023-07-01T00:00:00Z"))
+            .expiredAt(Instant.parse("2099-07-01T00:00:00Z"))
             .build();
         CourseRequest request = CourseRequest.builder()
             .id(1L)
             .name("LinearAlgebra")
             .type(CourseType.HIGHER_MATHEMATICS)
             .createdAt(Instant.parse("2023-06-01T00:00:00Z"))
-            .expiredAt(Instant.parse("2023-07-01T00:00:00Z"))
+            .expiredAt(Instant.parse("2099-07-01T00:00:00Z"))
             .build();
         when(courseRequestRepository.saveAndFlush(any())).thenReturn(request);
 
@@ -59,7 +61,7 @@ class CourseRequestServiceTest {
             .type(CourseType.HIGHER_MATHEMATICS)
             .contractId(1L)
             .createdAt(Instant.parse("2023-06-01T00:00:00Z"))
-            .expiredAt(Instant.parse("2023-07-01T00:00:00Z"))
+            .expiredAt(Instant.parse("2099-07-01T00:00:00Z"))
             .build();
         when(courseRequestRepository.findByContractIdAndId(1L, 1L)).thenReturn(request);
 
@@ -70,7 +72,7 @@ class CourseRequestServiceTest {
         assertEquals("LinearAlgebra", courseRequestDto.getName());
         assertEquals(CourseType.HIGHER_MATHEMATICS, courseRequestDto.getType());
         assertEquals(Instant.parse("2023-06-01T00:00:00Z"), courseRequestDto.getCreatedAt());
-        assertEquals(Instant.parse("2023-07-01T00:00:00Z"), courseRequestDto.getExpiredAt());
+        assertEquals(Instant.parse("2099-07-01T00:00:00Z"), courseRequestDto.getExpiredAt());
     }
 
     @Test
@@ -83,13 +85,13 @@ class CourseRequestServiceTest {
             .type(CourseType.HIGHER_MATHEMATICS)
             .contractId(1L)
             .createdAt(Instant.parse("2023-06-01T00:00:00Z"))
-            .expiredAt(Instant.parse("2023-07-01T00:00:00Z"))
+            .expiredAt(Instant.parse("2099-07-01T00:00:00Z"))
             .build();
 
         CourseRequestService courseRequestService = new CourseRequestService(courseRequestRepository, courseContentClient);
         boolean validateResult = courseRequestService.validateCourseRequest(requestDto);
 
-        assertEquals(true, validateResult);
+        assertTrue(validateResult);
     }
 
     @Test
@@ -101,13 +103,13 @@ class CourseRequestServiceTest {
             .name("LinearAlgebra")
             .contractId(1L)
             .createdAt(Instant.parse("2023-06-01T00:00:00Z"))
-            .expiredAt(Instant.parse("2023-07-01T00:00:00Z"))
+            .expiredAt(Instant.parse("2099-07-01T00:00:00Z"))
             .build();
 
         CourseRequestService courseRequestService = new CourseRequestService(courseRequestRepository, courseContentClient);
         boolean validateResult = courseRequestService.validateCourseRequest(requestDto);
 
-        assertEquals(false, validateResult);
+        assertFalse(validateResult);
     }
 
 }

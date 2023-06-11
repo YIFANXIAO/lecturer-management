@@ -46,7 +46,7 @@ class CourseRequestControllerTest extends TestBase {
             .type(CourseType.HIGHER_MATHEMATICS)
             .contractId(1L)
             .createdAt(Instant.parse("2023-06-01T00:00:00Z"))
-            .expiredAt(Instant.parse("2023-07-01T00:00:00Z"))
+            .expiredAt(Instant.parse("2099-07-01T00:00:00Z"))
             .build();
 
         String requestJson = objectMapper.writeValueAsString(requestDto);
@@ -62,7 +62,7 @@ class CourseRequestControllerTest extends TestBase {
         assertEquals("LinearAlgebra", courseRequest.getName());
         assertEquals(CourseType.HIGHER_MATHEMATICS, courseRequest.getType());
         assertEquals(Instant.parse("2023-06-01T00:00:00Z"), courseRequest.getCreatedAt());
-        assertEquals(Instant.parse("2023-07-01T00:00:00Z"), courseRequest.getExpiredAt());
+        assertEquals(Instant.parse("2099-07-01T00:00:00Z"), courseRequest.getExpiredAt());
 
     }
 
@@ -75,7 +75,7 @@ class CourseRequestControllerTest extends TestBase {
             .type(CourseType.HIGHER_MATHEMATICS)
             .contractId(contractId)
             .createdAt(Instant.parse("2023-06-01T00:00:00Z"))
-            .expiredAt(Instant.parse("2023-07-01T00:00:00Z"))
+            .expiredAt(Instant.parse("2099-07-01T00:00:00Z"))
             .build();
         request = courseRequestRepository.saveAndFlush(request);
 
@@ -86,7 +86,7 @@ class CourseRequestControllerTest extends TestBase {
             .andExpect(jsonPath("$.name", is("LinearAlgebra")))
             .andExpect(jsonPath("$.type", is(CourseType.HIGHER_MATHEMATICS.getCode())))
             .andExpect(jsonPath("$.createdAt", is("2023-06-01T00:00:00Z")))
-            .andExpect(jsonPath("$.expiredAt", is("2023-07-01T00:00:00Z")));
+            .andExpect(jsonPath("$.expiredAt", is("2099-07-01T00:00:00Z")));
     }
 
 }
