@@ -9,4 +9,6 @@ import java.util.Optional;
 
 public interface CoursePaymentRequestRepository extends JpaRepository<CoursePaymentRequest, Long> {
 
+    CoursePaymentRequest findByCourseId(Long courseId);
+
 }

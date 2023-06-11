@@ -1,17 +1,13 @@
 package learning.way.lecturer.management.services;
 
-import learning.way.lecturer.management.clients.CourseContentClient;
 import learning.way.lecturer.management.dtos.CoursePaymentRequestDto;
 import learning.way.lecturer.management.dtos.CourseRequestDto;
 import learning.way.lecturer.management.entities.CoursePaymentRequest;
-import learning.way.lecturer.management.entities.CourseRequest;
 import learning.way.lecturer.management.enums.ErrorCode;
 import learning.way.lecturer.management.exceptions.BaseBusinessException;
-import learning.way.lecturer.management.exceptions.TimeOutException;
 import learning.way.lecturer.management.message.CoursePaymentRequestCreatedMessage;
 import learning.way.lecturer.management.mq.LecturerMessageProduct;
 import learning.way.lecturer.management.repositories.CoursePaymentRequestRepository;
-import learning.way.lecturer.management.repositories.CourseRequestRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

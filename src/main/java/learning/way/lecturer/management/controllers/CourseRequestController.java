@@ -1,12 +1,13 @@
 package learning.way.lecturer.management.controllers;
 
 import io.swagger.annotations.Api;
+import learning.way.lecturer.management.dtos.CoursePaymentRequestDto;
 import learning.way.lecturer.management.dtos.CourseRequestDto;
 import learning.way.lecturer.management.enums.ErrorCode;
 import learning.way.lecturer.management.exceptions.BaseBusinessException;
+import learning.way.lecturer.management.services.CoursePaymentRequestService;
 import learning.way.lecturer.management.services.CourseRequestService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +22,8 @@ public class CourseRequestController {
 
     private final CourseRequestService courseRequestService;
 
+    private final CoursePaymentRequestService coursePaymentRequestService;
+
     @PostMapping("/courses")
     public Long submitCourseRequest(@PathVariable Long cid, @RequestBody CourseRequestDto courseRequestDto) {
 
@@ -29,6 +32,11 @@ public class CourseRequestController {
         }
 
         return courseRequestService.submitCourseRequest(courseRequestDto, cid);
+    }
+
+    @PostMapping("/course-payments")
+    public Long submitCoursePaymentRequest(@PathVariable Long cid, @RequestBody CoursePaymentRequestDto coursePaymentRequestDto) {
+        return coursePaymentRequestService.submitCoursePaymentRequest(coursePaymentRequestDto, cid);
     }
 
 }

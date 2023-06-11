@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CourseRequestRepository extends JpaRepository<CourseRequest, Long> {
 
+    CourseRequest findByContractId(Long contractId);
+
 }
