@@ -2,6 +2,8 @@ package learning.way.lecturer.management.controllers;
 
 import io.swagger.annotations.Api;
 import learning.way.lecturer.management.dtos.CourseRequestDto;
+import learning.way.lecturer.management.enums.ErrorCode;
+import learning.way.lecturer.management.exceptions.BaseBusinessException;
 import learning.way.lecturer.management.services.CourseRequestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +23,11 @@ public class CourseRequestController {
 
     @PostMapping("/courses")
     public Long submitCourseRequest(@PathVariable Long cid, @RequestBody CourseRequestDto courseRequestDto) {
+
+        if (!courseRequestService.validateCourseRequest(courseRequestDto)) {
+            throw new BaseBusinessException(ErrorCode.INVALID_COURSE_REQUEST);
+        }
+
         return courseRequestService.submitCourseRequest(courseRequestDto, cid);
     }
 
