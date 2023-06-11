@@ -36,6 +36,11 @@ public class CourseRequestController {
 
     @PostMapping("/course-payments")
     public Long submitCoursePaymentRequest(@PathVariable Long cid, @RequestBody CoursePaymentRequestDto coursePaymentRequestDto) {
+
+        if (!coursePaymentRequestService.validateCoursePaymentRequest(coursePaymentRequestDto)) {
+            throw new BaseBusinessException(ErrorCode.INVALID_COURSE_PAYMENT_REQUEST);
+        }
+
         return coursePaymentRequestService.submitCoursePaymentRequest(coursePaymentRequestDto, cid);
     }
 

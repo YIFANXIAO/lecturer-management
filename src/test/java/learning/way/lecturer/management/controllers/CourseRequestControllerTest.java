@@ -199,4 +199,44 @@ class CourseRequestControllerTest extends TestBase {
         assertNull(coursePaymentRequest);
     }
 
+    @Test
+    void should_validate_course_payment_request_failed_when_lack_amount() throws Exception {
+
+        long contractId = 1L;
+        CoursePaymentRequestDto requestDto = CoursePaymentRequestDto.builder()
+            .courseId(1L)
+            .amount(null)
+            .description(null)
+            .createdAt(Instant.parse("2023-06-01T00:00:00Z"))
+            .expiredAt(Instant.parse("2099-07-01T00:00:00Z"))
+            .build();
+
+        String requestJson = objectMapper.writeValueAsString(requestDto);
+
+        mockMvc.perform(post("/contracts/" + contractId + "/course-payments")
+                .content(requestJson)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void should_validate_course_payment_request_failed_when_expired_at_illegal() throws Exception {
+
+        long contractId = 1L;
+        CoursePaymentRequestDto requestDto = CoursePaymentRequestDto.builder()
+            .courseId(1L)
+            .amount(100L)
+            .description(null)
+            .createdAt(Instant.parse("1970-06-01T00:00:00Z"))
+            .expiredAt(Instant.parse("1970-07-01T00:00:00Z"))
+            .build();
+
+        String requestJson = objectMapper.writeValueAsString(requestDto);
+
+        mockMvc.perform(post("/contracts/" + contractId + "/course-payments")
+                .content(requestJson)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest());
+    }
+
 }
