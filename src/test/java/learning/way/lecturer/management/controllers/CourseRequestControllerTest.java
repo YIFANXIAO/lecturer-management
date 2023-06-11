@@ -86,6 +86,25 @@ class CourseRequestControllerTest extends TestBase {
 //    }
 
     @Test
+    void should_validate_course_request_failed_when_lack_type() throws Exception {
+
+        long contractId = 1L;
+        CourseRequestDto requestDto = CourseRequestDto.builder()
+            .name("LinearAlgebra")
+            .contractId(1L)
+            .createdAt(Instant.parse("2023-06-01T00:00:00Z"))
+            .expiredAt(Instant.parse("2099-07-01T00:00:00Z"))
+            .build();
+
+        String requestJson = objectMapper.writeValueAsString(requestDto);
+
+        mockMvc.perform(post("/contracts/" + contractId + "/courses")
+                .content(requestJson)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void should_get_course_request_success_by_contract_id_and_course_id() throws Exception {
 
         long contractId = 1L;
