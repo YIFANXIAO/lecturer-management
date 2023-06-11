@@ -3,10 +3,13 @@ package learning.way.lecturer.management.services;
 import learning.way.lecturer.management.clients.CourseContentClient;
 import learning.way.lecturer.management.dtos.CourseRequestDto;
 import learning.way.lecturer.management.entities.CourseRequest;
+import learning.way.lecturer.management.enums.ErrorCode;
+import learning.way.lecturer.management.exceptions.TimeOutException;
 import learning.way.lecturer.management.repositories.CourseRequestRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.Instant;
@@ -33,7 +36,20 @@ public class CourseRequestService {
                ).allMatch(item -> item);
     }
 
+    @Transactional
     public Long submitCourseRequest(CourseRequestDto courseRequestDto, Long contractId) {
+
+        for (int i = 0; i < 5; i++) {
+            try {
+                courseContentClient.submitCourseRequest(courseRequestDto);
+                break;
+            } catch (TimeOutException e) {
+                log.error("invoke courseContentClient.submitCourseRequest timeOut", e);
+                if (i == 4) {
+                    throw new TimeOutException(ErrorCode.INVOKE_TIMEOUT);
+                }
+            }
+        }
 
         CourseRequest courseRequest = CourseRequest.builder()
             .name(courseRequestDto.getName())
@@ -45,7 +61,6 @@ public class CourseRequestService {
             .build();
         courseRequest = courseRequestRepository.saveAndFlush(courseRequest);
 
-        courseContentClient.submitCourseRequest(courseRequestDto);
 
         return courseRequest.getId();
     }

@@ -6,6 +6,7 @@ import learning.way.lecturer.management.clients.CourseContentClient;
 import learning.way.lecturer.management.dtos.CourseRequestDto;
 import learning.way.lecturer.management.entities.CourseRequest;
 import learning.way.lecturer.management.enums.CourseType;
+import learning.way.lecturer.management.exceptions.TimeOutException;
 import learning.way.lecturer.management.repositories.CourseRequestRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ import java.time.Instant;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -64,6 +68,35 @@ class CourseRequestControllerTest extends TestBase {
         assertEquals(Instant.parse("2023-06-01T00:00:00Z"), courseRequest.getCreatedAt());
         assertEquals(Instant.parse("2099-07-01T00:00:00Z"), courseRequest.getExpiredAt());
 
+    }
+
+    @Test
+    void should_not_save_request_when_course_content_system_timeout() throws Exception {
+
+        long contractId = 1L;
+        CourseRequestDto requestDto = CourseRequestDto.builder()
+            .name("LinearAlgebra")
+            .type(CourseType.HIGHER_MATHEMATICS)
+            .contractId(1L)
+            .createdAt(Instant.parse("2023-06-01T00:00:00Z"))
+            .expiredAt(Instant.parse("2099-07-01T00:00:00Z"))
+            .build();
+
+        doThrow(TimeOutException.class).when(courseContentClient).submitCourseRequest(any());
+
+        String requestJson = objectMapper.writeValueAsString(requestDto);
+        mockMvc.perform(post("/contracts/" + contractId + "/courses")
+                .content(requestJson)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest());
+
+        CourseRequest courseRequest = courseRequestRepository.findById(1L).orElse(CourseRequest.builder().build());
+
+        assertNull(courseRequest.getName());
+        assertNull(courseRequest.getType());
+        assertNull(courseRequest.getContractId());
+        assertNull(courseRequest.getCreatedAt());
+        assertNull(courseRequest.getExpiredAt());
     }
 
     @Test
