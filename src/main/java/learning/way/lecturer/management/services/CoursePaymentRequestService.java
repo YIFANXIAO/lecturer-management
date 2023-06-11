@@ -27,14 +27,13 @@ public class CoursePaymentRequestService {
 
     private final LecturerMessageProduct lecturerMessageProduct;
 
-    public boolean validateCourseRequest(CourseRequestDto courseRequestDto) {
+    public boolean validateCoursePaymentRequest(CoursePaymentRequestDto coursePaymentRequestDto) {
         return Stream.of(
-                    StringUtils.hasText(courseRequestDto.getName()),
-                    !Objects.isNull(courseRequestDto.getType()),
-                    !Objects.isNull(courseRequestDto.getContractId()),
-                    !Objects.isNull(courseRequestDto.getCreatedAt()),
-                    !Objects.isNull(courseRequestDto.getExpiredAt()),
-                    courseRequestDto.getExpiredAt().isAfter(Instant.now())
+                    !Objects.isNull(coursePaymentRequestDto.getCourseId()),
+                    !Objects.isNull(coursePaymentRequestDto.getAmount()),
+                    !Objects.isNull(coursePaymentRequestDto.getCreatedAt()),
+                    !Objects.isNull(coursePaymentRequestDto.getExpiredAt()),
+                    coursePaymentRequestDto.getExpiredAt().isAfter(Instant.now())
                ).allMatch(item -> item);
     }
 
