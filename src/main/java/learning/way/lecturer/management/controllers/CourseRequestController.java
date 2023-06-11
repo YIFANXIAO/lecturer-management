@@ -31,8 +31,4 @@ public class CourseRequestController {
         return courseRequestService.submitCourseRequest(courseRequestDto, cid);
     }
 
-    @GetMapping("/courses/{coid}")
-    public CourseRequestDto getCourseRequest(@PathVariable Long cid, @PathVariable Long coid) {
-        return courseRequestService.getCourseRequest(cid, coid);
-    }
 }

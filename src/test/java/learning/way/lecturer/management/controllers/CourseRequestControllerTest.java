@@ -138,27 +138,4 @@ class CourseRequestControllerTest extends TestBase {
             .andExpect(status().isBadRequest());
     }
 
-    @Test
-    void should_get_course_request_success_by_contract_id_and_course_id() throws Exception {
-
-        long contractId = 1L;
-        CourseRequest request = CourseRequest.builder()
-            .name("LinearAlgebra")
-            .type(CourseType.HIGHER_MATHEMATICS)
-            .contractId(contractId)
-            .createdAt(Instant.parse("2023-06-01T00:00:00Z"))
-            .expiredAt(Instant.parse("2099-07-01T00:00:00Z"))
-            .build();
-        request = courseRequestRepository.saveAndFlush(request);
-
-        mockMvc.perform(get("/contracts/" + contractId + "/courses/" + request.getId())
-                .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.contractId", is(1)))
-            .andExpect(jsonPath("$.name", is("LinearAlgebra")))
-            .andExpect(jsonPath("$.type", is(CourseType.HIGHER_MATHEMATICS.getCode())))
-            .andExpect(jsonPath("$.createdAt", is("2023-06-01T00:00:00Z")))
-            .andExpect(jsonPath("$.expiredAt", is("2099-07-01T00:00:00Z")));
-    }
-
 }

@@ -79,33 +79,8 @@ class CourseRequestServiceTest {
         assertThrows(TimeOutException.class,
             () -> courseRequestService.submitCourseRequest(requestDto, 1L));
 
-        verify(courseContentClient, times(5)).submitCourseRequest(requestDto);
+        verify(courseContentClient, times(1)).submitCourseRequest(requestDto);
         verify(courseRequestRepository, times(0)).saveAndFlush(any());
-    }
-
-    @Test
-    void should_get_course_request_by_id() {
-        CourseContentClient courseContentClient = Mockito.mock(CourseContentClient.class);
-
-        CourseRequestRepository courseRequestRepository = Mockito.mock(CourseRequestRepository.class);
-        CourseRequest request = CourseRequest.builder()
-            .id(1L)
-            .name("LinearAlgebra")
-            .type(CourseType.HIGHER_MATHEMATICS)
-            .contractId(1L)
-            .createdAt(Instant.parse("2023-06-01T00:00:00Z"))
-            .expiredAt(Instant.parse("2099-07-01T00:00:00Z"))
-            .build();
-        when(courseRequestRepository.findByContractIdAndId(1L, 1L)).thenReturn(request);
-
-        CourseRequestService courseRequestService = new CourseRequestService(courseRequestRepository, courseContentClient);
-        CourseRequestDto courseRequestDto = courseRequestService.getCourseRequest(1L, 1L);
-
-        assertEquals(1L, courseRequestDto.getContractId());
-        assertEquals("LinearAlgebra", courseRequestDto.getName());
-        assertEquals(CourseType.HIGHER_MATHEMATICS, courseRequestDto.getType());
-        assertEquals(Instant.parse("2023-06-01T00:00:00Z"), courseRequestDto.getCreatedAt());
-        assertEquals(Instant.parse("2099-07-01T00:00:00Z"), courseRequestDto.getExpiredAt());
     }
 
     @Test

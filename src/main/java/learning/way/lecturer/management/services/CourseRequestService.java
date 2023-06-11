@@ -39,16 +39,11 @@ public class CourseRequestService {
     @Transactional
     public Long submitCourseRequest(CourseRequestDto courseRequestDto, Long contractId) {
 
-        for (int i = 0; i < 5; i++) {
-            try {
-                courseContentClient.submitCourseRequest(courseRequestDto);
-                break;
-            } catch (TimeOutException e) {
-                log.error("invoke courseContentClient.submitCourseRequest timeOut", e);
-                if (i == 4) {
-                    throw new TimeOutException(ErrorCode.INVOKE_TIMEOUT);
-                }
-            }
+        try {
+            courseContentClient.submitCourseRequest(courseRequestDto);
+        } catch (TimeOutException e) {
+            log.error("invoke courseContentClient.submitCourseRequest timeOut", e);
+            throw new TimeOutException(ErrorCode.INVOKE_TIMEOUT);
         }
 
         CourseRequest courseRequest = CourseRequest.builder()
@@ -63,20 +58,6 @@ public class CourseRequestService {
 
 
         return courseRequest.getId();
-    }
-
-    public CourseRequestDto getCourseRequest(Long contractId, Long courseRequestId) {
-
-        CourseRequest courseRequest = courseRequestRepository.findByContractIdAndId(contractId, courseRequestId);
-
-        return CourseRequestDto.builder()
-            .name(courseRequest.getName())
-            .type(courseRequest.getType())
-            .description(courseRequest.getDescription())
-            .contractId(courseRequest.getContractId())
-            .createdAt(courseRequest.getCreatedAt())
-            .expiredAt(courseRequest.getExpiredAt())
-            .build();
     }
 
 }
