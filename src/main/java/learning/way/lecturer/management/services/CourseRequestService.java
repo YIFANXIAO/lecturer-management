@@ -34,10 +34,9 @@ public class CourseRequestService {
         return courseRequest.getId();
     }
 
-    public CourseRequestDto getCourseRequest(Long courseRequestId) {
+    public CourseRequestDto getCourseRequest(Long contractId, Long courseRequestId) {
 
-        CourseRequest courseRequest = courseRequestRepository.findById(courseRequestId)
-            .orElse(CourseRequest.builder().build());
+        CourseRequest courseRequest = courseRequestRepository.findByContractIdAndId(contractId, courseRequestId);
 
         return CourseRequestDto.builder()
             .name(courseRequest.getName())

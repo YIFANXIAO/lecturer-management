@@ -65,7 +65,7 @@ class CourseRequestServiceTest {
         when(courseRequestRepository.findById(1L)).thenReturn(Optional.ofNullable(request));
 
         CourseRequestService courseRequestService = new CourseRequestService(courseRequestRepository, courseContentClient);
-        CourseRequestDto courseRequestDto = courseRequestService.getCourseRequest(1L);
+        CourseRequestDto courseRequestDto = courseRequestService.getCourseRequest(1L, 1L);
 
         assertEquals(1L, courseRequestDto.getContractId());
         assertEquals("LinearAlgebra", courseRequestDto.getName());

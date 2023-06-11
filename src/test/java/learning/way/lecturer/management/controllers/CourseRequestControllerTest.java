@@ -18,6 +18,7 @@ import java.time.Instant;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -37,7 +38,7 @@ class CourseRequestControllerTest extends TestBase {
     CourseContentClient courseContentClient;
 
     @Test
-    void should_change_ticket_success_given_ticket_service_change_ticket_success() throws Exception {
+    void should_submit_course_request_success_when_params_legal() throws Exception {
 
         long contractId = 1L;
         CourseRequestDto requestDto = CourseRequestDto.builder()
@@ -63,6 +64,29 @@ class CourseRequestControllerTest extends TestBase {
         assertEquals(Instant.parse("2023-06-01T00:00:00Z"), courseRequest.getCreatedAt());
         assertEquals(Instant.parse("2023-07-01T00:00:00Z"), courseRequest.getExpiredAt());
 
+    }
+
+    @Test
+    void should_get_course_request_success_by_contract_id_and_course_id() throws Exception {
+
+        long contractId = 1L;
+        CourseRequest request = CourseRequest.builder()
+            .name("LinearAlgebra")
+            .type(CourseType.HIGHER_MATHEMATICS)
+            .contractId(contractId)
+            .createdAt(Instant.parse("2023-06-01T00:00:00Z"))
+            .expiredAt(Instant.parse("2023-07-01T00:00:00Z"))
+            .build();
+        request = courseRequestRepository.saveAndFlush(request);
+
+        mockMvc.perform(get("/contracts/" + contractId + "/courses/" + request.getId())
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.contractId", is(1)))
+            .andExpect(jsonPath("$.name", is("LinearAlgebra")))
+            .andExpect(jsonPath("$.type", is(CourseType.HIGHER_MATHEMATICS.getCode())))
+            .andExpect(jsonPath("$.createdAt", is("2023-06-01T00:00:00Z")))
+            .andExpect(jsonPath("$.expiredAt", is("2023-07-01T00:00:00Z")));
     }
 
 }
